@@ -24,8 +24,6 @@ public class HelloController {
         model.addAttribute("perso", new Personnage());
         return "hello";
     }
-
-
     @PostMapping("/say")
     public String sayHello(Model model, @ModelAttribute Personnage personnage){
 
@@ -49,21 +47,22 @@ public class HelloController {
 
         Personnage perso = PersoList.get(index);
         model.addAttribute("perso", perso);
+        model.addAttribute("index",index);
         return "detail";
     }
 
 
-    @GetMapping("/details")
-    public String showDetails(Model model){
-        model.addAttribute("index", persoIndex);
-        return "detail";
-    }
-
-
-
-    @PostMapping("/details")
+    @PostMapping("/details/{index}")
     public String saveModifs(Model model, @ModelAttribute Personnage personnage, @PathVariable("index") int index){
+        model.addAttribute("personnages", PersoList);
         PersoList.set(index,personnage);
+        return "personalized-hello";
+    }
+
+    @GetMapping("/delete/{index}")
+    public String deletePerso(Model model, @PathVariable("index") int index){
+        model.addAttribute("personnages", PersoList);
+        PersoList.remove(index);
         return "personalized-hello";
     }
 }

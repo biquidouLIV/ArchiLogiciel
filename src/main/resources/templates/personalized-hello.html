@@ -17,6 +17,7 @@
             | race : <span th:text="${perso.race}"></span>
             | index : <span th:text="${personnages.indexOf(perso)}"></span>
             <a th:href="@{/hello/details/{index}(index=${personnages.indexOf(perso)})}" class="DetailPersoButton">+</a>
+            <a th:href="@{/hello/delete/{index}(index=${personnages.indexOf(perso)})}" class="DetailPersoButton">x</a>
         </li>
         <li class="AddPersoLigne">
             <a th:href="@{/hello/say}" class="AddPerso">Ajouter un personnage</a>

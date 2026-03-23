@@ -11,7 +11,7 @@
     </header>
 
     <main class="detailsPerso">
-        <form th:action="@{/hello/details}" method="post" th:object="${perso}">
+        <form th:action="@{/hello/details/{index}(index=${index})}" method="post" th:object="${perso}">
             <div class="CreaPersoForm">
                 <label for="name">Name</label>
                 <input type="text" id="name" th:field="*{name}">
@@ -23,10 +23,12 @@
             <div class="CreaPersoForm">
                 <label for="classe">Classe</label>
                 <select id="classe" th:field="*{classe}">
-                    <option th:value="magicien" th:text ="magicien">magicien</option>
-                    <option th:value="mage" th:text ="mage">mage</option>
-                    <option th:value="mec_de_magie" th:text ="mec_de_magie">mec de magie</option>
-                    <option th:value="GP1" th:text ="GP1">GP1</option>
+                    <option th:value="Sorcier" th:text ="Sorcier"></option>
+                    <option th:value="Chevalier" th:text ="Chevalier"></option>
+                    <option th:value="Archer" th:text ="Archer"></option>
+                    <option th:value="Occultiste" th:text ="Occultiste"></option>
+                    <option th:value="Paladin" th:text ="Paladin"></option>
+                    <option th:value="Ménestrel" th:text ="Ménestrel"></option>
                 </select>
             </div>
             <div class="CreaPersoForm">
@@ -34,12 +36,46 @@
                 <select id="race" th:field="*{race}">
                     <option th:value="Orc" th:text ="Orc"></option>
                     <option th:value="Elfe" th:text ="Elfe"></option>
+                    <option th:value="Elfelin" th:text ="Elfelin"></option>
                     <option th:value="Nain" th:text ="Nain"></option>
                     <option th:value="Hobbit" th:text ="Hobbit"></option>
+                    <option th:value="Gobelin" th:text ="Gobelin"></option>
                 </select>
             </div>
+
+
+            <div class="CreaPersoForm">
+                <label for="force">force</label>
+                <input type="number" id="force" th:field="*{force}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="agilite">agilite</label>
+                <input type="number" id="agilite" th:field="*{agilite}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="endurance">endurance</label>
+                <input type="number" id="endurance" th:field="*{endurance}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="rapidite">rapidite</label>
+                <input type="number" id="rapidite" th:field="*{rapidite}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="intelligence">intelligence</label>
+                <input type="number" id="intelligence" th:field="*{intelligence}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="chance">chance</label>
+                <input type="number" id="chance" th:field="*{chance}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="charisme">charisme</label>
+                <input type="number" id="charisme" th:field="*{charisme}">
+            </div>
+
+
             <div class="CreaPersoButton">
-                <button type="submit">Créationner</button>
+                <button type="submit">modifier</button>
             </div>
         </form>
 
