@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personnages</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <p>Vos personnages</p>
+    </header>
+    <div class="ListePersos">
+        <li th:each="perso : ${personnages}">
+            name  : <span th:text="${perso.name}"></span>
+            | level : <span th:text="${perso.level}"></span>
+            | classe : <span th:text="${perso.classe}"></span>
+            | race : <span th:text="${perso.race}"></span>
+            | index : <span th:text="${personnages.indexOf(perso)}"></span>
+            <a th:href="@{/hello/details/{index}(index=${personnages.indexOf(perso)})}" class="DetailPersoButton">+</a>
+        </li>
+        <li class="AddPersoLigne">
+            <a th:href="@{/hello/say}" class="AddPerso">Ajouter un personnage</a>
+        </li>
+    </div>
+    <footer>
+        <p>Fin de vos personnages</p>
+    </footer>
+</body>
+</html>

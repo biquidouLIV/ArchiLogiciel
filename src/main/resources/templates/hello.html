@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <p>Créationne ton bonome</p>
+    </header>
+
+    <main class="CreaPerso">
+        <form th:action="@{/hello/say}" method="post" th:object="${perso}">
+            <div class="CreaPersoForm">
+                <label for="name">Name</label>
+                <input type="text" id="name" th:field="*{name}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="level">Level</label>
+                <input type="number" id="level" th:field="*{level}">
+            </div>
+            <div class="CreaPersoForm">
+                <label for="classe">Classe</label>
+                    <select id="classe" th:field="*{classe}">
+                        <option th:value="magicien" th:text ="magicien">magicien</option>
+                        <option th:value="mage" th:text ="mage">mage</option>
+                        <option th:value="mec_de_magie" th:text ="mec_de_magie">mec de magie</option>
+                        <option th:value="GP1" th:text ="GP1">GP1</option>
+                    </select>
+            </div>
+            <div class="CreaPersoForm">
+                <label for="race">Classe</label>
+                <select id="race" th:field="*{race}">
+                    <option th:value="Orc" th:text ="Orc"></option>
+                    <option th:value="Elfe" th:text ="Elfe"></option>
+                    <option th:value="Nain" th:text ="Nain"></option>
+                    <option th:value="Hobbit" th:text ="Hobbit"></option>
+                </select>
+            </div>
+            <div class="CreaPersoButton">
+                <a th:href="@{/hello/list}">Annuler</a>
+                <button type="submit">Créationner</button>
+            </div>
+        </form>
+    </main>
+    <footer>
+
+    </footer>
+
+</body>
+</html>
