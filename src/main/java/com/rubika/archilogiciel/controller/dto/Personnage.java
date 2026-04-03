@@ -11,6 +11,7 @@ public class Personnage {
     private String classe;
     private String race;
     private int level;
+    private int statsPoints;
 
     private int force;
     private int agilite;
@@ -24,27 +25,27 @@ public class Personnage {
     public Personnage(){
         for (int i = 0; i < 20; i++)
         {
-            switch ((int)Math.random()*7){
+            switch ((int)(Math.random()*7)){
+                case 0:
+                    this.force++;
+                    break;
                 case 1:
-                    force++;
+                    this.agilite++;
                     break;
                 case 2:
-                    agilite++;
+                    this.endurance++;
                     break;
                 case 3:
-                    endurance++;
+                    this.rapidite++;
                     break;
                 case 4:
-                    rapidite++;
+                    this.intelligence++;
                     break;
                 case 5:
-                    intelligence++;
+                    this.chance++;
                     break;
                 case 6:
-                    chance++;
-                    break;
-                case 7:
-                    charisme++;
+                    this.charisme++;
                     break;
             }
         }
@@ -136,8 +137,8 @@ public class Personnage {
     public int getCharisme(){
         return this.charisme;
     }
-    public void setCharisme(int charisme){
-        this.charisme = charisme;
-    }
+    public void setCharisme(int charisme){this.charisme = charisme;}
 
+    public int getStatsPoints(){ return this.statsPoints;}
+    public void setStatsPoints(int statsPoints){ this.statsPoints = statsPoints;}
 }

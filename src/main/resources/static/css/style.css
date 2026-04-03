@@ -201,3 +201,21 @@ button {
     gap: 30px;
 }
 
+.statsDetails{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.statsDetails a{
+    display: flex;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    border: 5px solid black;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+}
+

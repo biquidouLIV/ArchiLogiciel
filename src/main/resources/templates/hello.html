@@ -11,14 +11,10 @@
     </header>
 
     <main class="CreaPerso">
-        <form th:action="@{/hello/say}" method="post" th:object="${perso}">
+        <form th:action="@{/hello/create}" method="post" th:object="${perso}">
             <div class="CreaPersoForm">
                 <label for="name">Name</label>
-                <input type="text" id="name" th:field="*{name}">
-            </div>
-            <div class="CreaPersoForm">
-                <label for="level">Level</label>
-                <input type="number" id="level" th:field="*{level}">
+                <input type="text" id="name" th:field="*{name}" required>
             </div>
             <div class="CreaPersoForm">
                 <label for="classe">Classe</label>

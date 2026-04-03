@@ -1,6 +1,5 @@
 package com.rubika.archilogiciel.controller;
 
-import com.rubika.archilogiciel.controller.dto.NameDto;
 import com.rubika.archilogiciel.controller.dto.Personnage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,19 +12,20 @@ import java.util.ArrayList;
 public class HelloController {
 
     private ArrayList<Personnage> PersoList = new ArrayList<Personnage>();
-    public int persoIndex;
 
 
 
 
 
-    @GetMapping("/say")
-    public String sayHello(Model model){
+    @GetMapping("/create")
+    public String showCreatePerso(Model model){
         model.addAttribute("perso", new Personnage());
         return "hello";
     }
-    @PostMapping("/say")
-    public String sayHello(Model model, @ModelAttribute Personnage personnage){
+    @PostMapping("/create")
+    public String saveCreatePerso(Model model, @ModelAttribute Personnage personnage){
+
+        personnage.setStatsPoints(personnage.getLevel()*3);
 
         PersoList.add(personnage);
         model.addAttribute("personnages", PersoList);
@@ -54,6 +54,10 @@ public class HelloController {
 
     @PostMapping("/details/{index}")
     public String saveModifs(Model model, @ModelAttribute Personnage personnage, @PathVariable("index") int index){
+        personnage.setStatsPoints(personnage.getLevel()*3 - personnage.getForce() - personnage.getAgilite() -
+                personnage.getEndurance() - personnage.getRapidite() -
+                personnage.getIntelligence() - personnage.getChance() -
+                personnage.getCharisme() +20);
         model.addAttribute("personnages", PersoList);
         PersoList.set(index,personnage);
         return "personalized-hello";
@@ -64,5 +68,49 @@ public class HelloController {
         model.addAttribute("personnages", PersoList);
         PersoList.remove(index);
         return "personalized-hello";
+    }
+
+    @GetMapping("/addStat/{index}/{stats}")
+    public String addStat(@PathVariable("index") int index, @PathVariable("stats") String stat ){
+        Personnage perso = PersoList.get(index);
+
+
+        if(perso.getStatsPoints() > 0){
+            switch (stat) {
+                case "force":
+                    perso.setForce(perso.getForce()+1);
+                    break;
+                case "agilite":
+                    perso.setAgilite(perso.getAgilite()+1);
+                    break;
+                case "endurance":
+                    perso.setEndurance(perso.getEndurance()+1);
+                    break;
+                case "rapidite":
+                    perso.setRapidite(perso.getRapidite()+1);
+                    break;
+                case "intelligence":
+                    perso.setIntelligence(perso.getIntelligence()+1);
+                    break;
+                case "chance":
+                    perso.setChance(perso.getChance()+1);
+                    break;
+                case "charisme":
+                    perso.setCharisme(perso.getCharisme()+1);
+                    break;
+
+            }
+            perso.setStatsPoints(perso.getStatsPoints()-1);
+        }
+        return "redirect:/hello/details/" + index;
+    }
+
+    @GetMapping("/cheatpage/{index}")
+    public String showCheatPage(Model model, @PathVariable("index") int index){
+    Personnage perso = PersoList.get(index);
+    model.addAttribute("perso", perso);
+    model.addAttribute("index",index);
+
+    return "cheatpage";
     }
 }

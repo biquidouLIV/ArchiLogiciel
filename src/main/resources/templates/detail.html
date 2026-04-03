@@ -14,12 +14,18 @@
         <form th:action="@{/hello/details/{index}(index=${index})}" method="post" th:object="${perso}">
             <div class="CreaPersoForm">
                 <label for="name">Name</label>
-                <input type="text" id="name" th:field="*{name}">
+                <input type="text" id="name" th:field="*{name}" readonly>
             </div>
             <div class="CreaPersoForm">
                 <label for="level">Level</label>
-                <input type="number" id="level" th:field="*{level}">
+                <input type="number" id="level" th:field="*{level}" readonly>
             </div>
+
+            <div class="CreaPersoForm">
+                <label for="statsPoints">stats Points</label>
+                <input type="number" id="statsPoints" th:field="*{statsPoints}" readonly>
+            </div>
+
             <div class="CreaPersoForm">
                 <label for="classe">Classe</label>
                 <select id="classe" th:field="*{classe}">
@@ -33,49 +39,68 @@
             </div>
             <div class="CreaPersoForm">
                 <label for="race">Classe</label>
-                <select id="race" th:field="*{race}">
-                    <option th:value="Orc" th:text ="Orc"></option>
-                    <option th:value="Elfe" th:text ="Elfe"></option>
-                    <option th:value="Elfelin" th:text ="Elfelin"></option>
-                    <option th:value="Nain" th:text ="Nain"></option>
-                    <option th:value="Hobbit" th:text ="Hobbit"></option>
-                    <option th:value="Gobelin" th:text ="Gobelin"></option>
-                </select>
+                <input type="text" id="race" th:field="*{race}" readonly>
             </div>
 
 
             <div class="CreaPersoForm">
                 <label for="force">force</label>
-                <input type="number" id="force" th:field="*{force}">
+                    <div class="statsDetails">
+                        <input type="number" id="force" th:field="*{force}" readonly>
+                        <a th:href="@{/hello/addStat/{index}/force(index=${index})}">+</a>
+                    </div>
             </div>
+
             <div class="CreaPersoForm">
-                <label for="agilite">agilite</label>
-                <input type="number" id="agilite" th:field="*{agilite}">
+                <label for="agilite">agilité</label>
+                <div class="statsDetails">
+                    <input type="number" id="agilite" th:field="*{agilite}" readonly>
+                    <a th:href="@{/hello/addStat/{index}/agilite(index=${index})}">+</a>
+                </div>
             </div>
+
             <div class="CreaPersoForm">
                 <label for="endurance">endurance</label>
-                <input type="number" id="endurance" th:field="*{endurance}">
+                <div class="statsDetails">
+                    <input type="number" id="endurance" th:field="*{endurance}" readonly>
+                    <a th:href="@{/hello/addStat/{index}/endurance(index=${index})}">+</a>
+                </div>
             </div>
+
             <div class="CreaPersoForm">
-                <label for="rapidite">rapidite</label>
-                <input type="number" id="rapidite" th:field="*{rapidite}">
+                <label for="rapidite">rapidité</label>
+                <div class="statsDetails">
+                    <input type="number" id="rapidite" th:field="*{rapidite}" readonly>
+                    <a th:href="@{/hello/addStat/{index}/rapidite(index=${index})}">+</a>
+                </div>
             </div>
+
             <div class="CreaPersoForm">
                 <label for="intelligence">intelligence</label>
-                <input type="number" id="intelligence" th:field="*{intelligence}">
+                <div class="statsDetails">
+                    <input type="number" id="intelligence" th:field="*{intelligence}" readonly>
+                    <a th:href="@{/hello/addStat/{index}/intelligence(index=${index})}">+</a>
+                </div>
             </div>
+
             <div class="CreaPersoForm">
                 <label for="chance">chance</label>
-                <input type="number" id="chance" th:field="*{chance}">
+                <div class="statsDetails">
+                    <input type="number" id="chance" th:field="*{chance}" readonly>
+                    <a th:href="@{/hello/addStat/{index}/chance(index=${index})}">+</a>
+                </div>
             </div>
             <div class="CreaPersoForm">
                 <label for="charisme">charisme</label>
-                <input type="number" id="charisme" th:field="*{charisme}">
+                <div class="statsDetails">
+                    <input type="number" id="charisme" th:field="*{charisme}" readonly>
+                    <a th:href="@{/hello/addStat/{index}/charisme(index=${index})}">+</a>
+                </div>
             </div>
 
 
             <div class="CreaPersoButton">
-                <button type="submit">modifier</button>
+                <button type="submit">Enregistrer</button>
             </div>
         </form>
 
