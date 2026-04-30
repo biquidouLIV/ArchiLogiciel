@@ -1,6 +1,9 @@
 package com.rubika.archilogiciel.controller;
 
 import com.rubika.archilogiciel.controller.dto.Personnage;
+import com.rubika.archilogiciel.controller.dto.UserList;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -113,4 +116,33 @@ public class HelloController {
 
     return "cheatpage";
     }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String login, @RequestParam String password, HttpServletResponse response)
+    {
+        boolean userExists = UserList.userList.stream().anyMatch(user -> user.getlogin().equals(login) && user.getlogin().equals(password));
+
+        if(userExists)
+        {
+            Cookie cookie = new Cookie("status", login);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
+            return "redirect:/personnages";
+        }
+
+        return "login";
+    }
+
+    @GetMapping("/personnages")
+    public String listPersonnages(@CookieValue(value = "status", defaultValue = "anonymous") String status, Model model) {
+        if (status.equals("loggedin")) {
+            // model.addAttribute("personnages", repo.findByOwner(currentLogin));
+        } else {
+            // renvoyer une liste vide[cite: 1]
+        }
+        return "liste_personnages";
+    }
+
+
 }

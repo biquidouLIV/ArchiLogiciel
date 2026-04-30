@@ -9,6 +9,15 @@
     <header>
         <p>Vos personnages</p>
     </header>
+
+    <h2 id="loggedin">ANONYMOUS</h2>
+
+    <!-- Section qui change selon l'état -->
+    <div id="action-area">
+        <!-- JS injectera le bouton ici -->
+    </div>
+
+
     <div class="ListePersos">
         <li th:each="perso : ${personnages}">
             name  : <span th:text="${perso.name}"></span>
@@ -26,4 +35,27 @@
         <p>Fin de vos personnages</p>
     </footer>
 </body>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let cookies = document.cookie.split(';');
+            let userLogin = null;
+
+            cookies.forEach(cookie => {
+                if (cookie.trim().startsWith("status=")) {
+                    userLogin = cookie.split('=')[1];
+                }
+            });
+
+            if (userLogin) {
+                // Si loggé : on affiche le nom et le bouton de création[cite: 1]
+                document.getElementById("loggedin").innerText = "Connecté en tant que : " + userLogin;
+                document.getElementById("action-area").innerHTML = '<a href="/creer">Créer un personnage</a>';
+            } else {
+                // Si anonyme : on affiche les liens de connexion[cite: 1]
+                document.getElementById("action-area").innerHTML =
+                    '<a href="/login">Se connecter</a> ou <a href="/register">S\'inscrire</a>';
+            }
+        });
+    </script>
 </html>
