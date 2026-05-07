@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/hello")
@@ -19,7 +20,8 @@ public class HelloController {
     private ArrayList<Personnage> PersoList = new ArrayList<Personnage>();
     @Autowired
     private MongoPersonnageDao mongoPersonnageDao;
-
+    @Autowired
+    private MongoUserDao mongoUserDao;
 
 
 
@@ -33,10 +35,16 @@ public class HelloController {
     public String saveCreatePerso(@CookieValue(value = "status", defaultValue = "anonymous") String login,
                                   @ModelAttribute Personnage personnage) {
         if (!login.equals("anonymous")) {
-            PersonnageMongoModel model = new PersonnageMongoModel(personnage);
-            model.setOwnerId(login); // Lie le personnage au compte connecté
-            mongoPersonnageDao.save(model); // Sauvegarde persistante
+            try {
+                PersonnageMongoModel model = new PersonnageMongoModel(personnage);
+                model.setOwnerId(login);
+                mongoPersonnageDao.save(model);
+            } catch (Exception e) {
+                System.err.println(">>> ERREUR MONGO save: " + e.getMessage());
+            }
+            return "redirect:/hello/personnages";
         }
+        PersoList.add(personnage);
         return "redirect:/hello/list";
     }
 
@@ -49,13 +57,11 @@ public class HelloController {
 
 
 
-    @GetMapping("/details/{index}")
-    public String showDetails(@PathVariable("index") int index, Model model){
-
-        Personnage perso = PersoList.get(index);
+    @GetMapping("/details/{id}")
+    public String showDetails(@PathVariable("id") UUID id, Model model) {
+        PersonnageMongoModel perso = mongoPersonnageDao.findById(id).orElseThrow();
         model.addAttribute("perso", perso);
-        model.addAttribute("index",index);
-        return "detail";
+        return "detail-mongo";
     }
 
 
@@ -70,11 +76,10 @@ public class HelloController {
         return "personalized-hello";
     }
 
-    @GetMapping("/delete/{index}")
-    public String deletePerso(Model model, @PathVariable("index") int index){
-        model.addAttribute("personnages", PersoList);
-        PersoList.remove(index);
-        return "personalized-hello";
+    @GetMapping("/delete/{id}")
+    public String deletePerso(@PathVariable("id") UUID id) {
+        mongoPersonnageDao.deleteById(id);
+        return "redirect:/hello/personnages";
     }
 
     @GetMapping("/addStat/{index}/{stats}")
@@ -124,14 +129,16 @@ public class HelloController {
 
     @GetMapping("/personnages")
     public String listPersonnages(@CookieValue(value = "status", defaultValue = "anonymous") String status, Model model) {
-        model.addAttribute("status",status);
-
-        if (!status.equals("anonymous")) {
-            model.addAttribute("personnages", mongoPersonnageDao.findByOwnerId(status));
+        System.out.println(">>> status cookie: " + status);
+        try {
+            var persos = mongoPersonnageDao.findByOwnerId(status);
+            System.out.println(">>> trouvé: " + persos.size());
+            model.addAttribute("personnages", persos);
+        } catch (Exception e) {
+            System.err.println(">>> ERREUR MONGO: " + e.getMessage());
+            model.addAttribute("personnages", new ArrayList<>());
         }
-        else {
-            model.addAttribute("personnages", new ArrayList<PersonnageMongoModel>());
-        }
+        model.addAttribute("status", status);
         return "personalized-hello";
     }
 
@@ -143,15 +150,8 @@ public class HelloController {
 
     @PostMapping("/register")
     public String register(@RequestParam String login, @RequestParam String password) {
-        // On utilise le nom complet pour éviter toute confusion avec une variable
-        boolean exists = com.rubika.archilogiciel.controller.dto.UserList.userList.stream()
-                .anyMatch(u -> u.getLogin().equals(login));
-
-        if (!exists) {
-            com.rubika.archilogiciel.controller.dto.User newUser = new com.rubika.archilogiciel.controller.dto.User();
-            newUser.setLogin(login); // Attention au L majuscule ici
-            newUser.setPassword(password);
-            com.rubika.archilogiciel.controller.dto.UserList.userList.add(newUser);
+        if (!mongoUserDao.existsById(login)) {
+            mongoUserDao.save(new UserMongoModel(login, password));
             System.out.println("Nouvel utilisateur créé : " + login);
         }
         return "redirect:/hello/login";
@@ -159,11 +159,8 @@ public class HelloController {
 
     @PostMapping("/login")
     public String login(@RequestParam String login, @RequestParam String password, HttpServletResponse response) {
-        // Vérification dans la liste statique de la classe UserList
-        boolean authSuccess = com.rubika.archilogiciel.controller.dto.UserList.userList.stream()
-                .anyMatch(u -> u.getLogin().equals(login) && u.getPassword().equals(password));
-
-        if (authSuccess) {
+        UserMongoModel user = mongoUserDao.findByLoginAndPassword(login, password);
+        if (user != null) {
             Cookie cookie = new Cookie("status", login);
             cookie.setPath("/");
             cookie.setMaxAge(3600);
@@ -172,6 +169,7 @@ public class HelloController {
         }
         return "redirect:/hello/login?error=true";
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {

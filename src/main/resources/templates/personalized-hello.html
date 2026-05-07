@@ -8,7 +8,7 @@
 <body>
 <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #333; color: white;">
     <div class="logo">
-        <a th:href="@{/hello/home}" style="color: white; text-decoration: none; font-weight: bold;">Mon App Persos</a>
+        <a th:href="@{/hello/home}" style="color: white; text-decoration: none; font-weight: bold;">Personnages</a>
     </div>
 
     <div class="user-menu">
@@ -32,8 +32,8 @@
             | level : <span th:text="${perso.level}"></span>
             | classe : <span th:text="${perso.classe}"></span>
             | race : <span th:text="${perso.race}"></span>
-            <a th:href="@{/hello/details/{index}(index=${personnages.indexOf(perso)})}" class="DetailPersoButton">+</a>
-            <a th:href="@{/hello/delete/{index}(index=${personnages.indexOf(perso)})}" class="DetailPersoButton">x</a>
+            <a th:href="@{/hello/details/{id}(id=${perso.id})}" class="DetailPersoButton">+</a>
+            <a th:href="@{/hello/delete/{id}(id=${perso.id})}" class="DetailPersoButton">x</a>
         </li>
         <li class="AddPersoLigne">
             <a th:href="@{/hello/create}" class="AddPerso">Ajouter un personnage</a>
