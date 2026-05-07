@@ -61,7 +61,7 @@ public class HelloController {
     public String showDetails(@PathVariable("id") UUID id, Model model) {
         PersonnageMongoModel perso = mongoPersonnageDao.findById(id).orElseThrow();
         model.addAttribute("perso", perso);
-        return "detail-mongo";
+        return "detailMongo";
     }
 
 
@@ -117,13 +117,11 @@ public class HelloController {
         return "redirect:/hello/details/" + index;
     }
 
-    @GetMapping("/cheatpage/{index}")
-    public String showCheatPage(Model model, @PathVariable("index") int index){
-    Personnage perso = PersoList.get(index);
-    model.addAttribute("perso", perso);
-    model.addAttribute("index",index);
-
-    return "cheatpage";
+    @GetMapping("/cheatpage/{id}")
+    public String showCheatPageMongo(@PathVariable("id") UUID id, Model model) {
+        PersonnageMongoModel perso = mongoPersonnageDao.findById(id).orElseThrow();
+        model.addAttribute("perso", perso);
+        return "cheatpage";
     }
 
 
@@ -180,4 +178,62 @@ public class HelloController {
         return "redirect:/hello/login";
     }
 
+    @GetMapping("/addStatMongo/{id}/{stat}")
+    public String addStatMongo(@PathVariable("id") UUID id, @PathVariable("stat") String stat) {
+        PersonnageMongoModel perso = mongoPersonnageDao.findById(id).orElseThrow();
+        if (perso.getStatsPoints() > 0) {
+            switch (stat) {
+                case "force"        -> perso.setForce(perso.getForce() + 1);
+                case "agilite"      -> perso.setAgilite(perso.getAgilite() + 1);
+                case "endurance"    -> perso.setEndurance(perso.getEndurance() + 1);
+                case "rapidite"     -> perso.setRapidite(perso.getRapidite() + 1);
+                case "intelligence" -> perso.setIntelligence(perso.getIntelligence() + 1);
+                case "chance"       -> perso.setChance(perso.getChance() + 1);
+                case "charisme"     -> perso.setCharisme(perso.getCharisme() + 1);
+            }
+            perso.setStatsPoints(perso.getStatsPoints() - 1);
+            mongoPersonnageDao.save(perso);
+        }
+        return "redirect:/hello/details/" + id;
+    }
+
+    @PostMapping("/changeClasse/{id}")
+    public String changeClasse(@PathVariable("id") UUID id, @RequestParam String classe) {
+        PersonnageMongoModel perso = mongoPersonnageDao.findById(id).orElseThrow();
+        if (perso.getLevel() >= 5) {
+            perso.setClasse(classe);
+            mongoPersonnageDao.save(perso);
+        }
+        return "redirect:/hello/details/" + id;
+    }
+
+    @PostMapping("/cheatpage/{id}")
+    public String saveCheatPageMongo(@PathVariable("id") UUID id,
+                                     @RequestParam String name,
+                                     @RequestParam String classe,
+                                     @RequestParam String race,
+                                     @RequestParam int level,
+                                     @RequestParam int force,
+                                     @RequestParam int agilite,
+                                     @RequestParam int endurance,
+                                     @RequestParam int rapidite,
+                                     @RequestParam int intelligence,
+                                     @RequestParam int chance,
+                                     @RequestParam int charisme) {
+        PersonnageMongoModel perso = mongoPersonnageDao.findById(id).orElseThrow();
+        perso.setName(name);
+        perso.setClasse(classe);
+        perso.setRace(race);
+        perso.setLevel(level);
+        perso.setForce(force);
+        perso.setAgilite(agilite);
+        perso.setEndurance(endurance);
+        perso.setRapidite(rapidite);
+        perso.setIntelligence(intelligence);
+        perso.setChance(chance);
+        perso.setCharisme(charisme);
+        perso.setStatsPoints(level * 3 - force - agilite - endurance - rapidite - intelligence - chance - charisme + 20);
+        mongoPersonnageDao.save(perso);
+        return "redirect:/hello/details/" + id;
+    }
 }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Détails personnage</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header><p>détails perso</p></header>
+<main class="detailsPerso">
+  <div class="CreaPersoInfos">
+
+    <div class="CreaPersoForm">
+      <label>Nom</label>
+      <input type="text" th:value="${perso.name}" readonly>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Niveau</label>
+      <input type="number" th:value="${perso.level}" readonly>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Race</label>
+      <input type="text" th:value="${perso.race}" readonly>
+    </div>
+
+    <div class="CreaPersoForm" th:if="${perso.level < 5}">
+      <label>Classe</label>
+      <input type="text" th:value="${perso.classe}" readonly>
+    </div>
+
+    <div class="CreaPersoForm" th:if="${perso.level >= 5}">
+      <label for="classe">Classe</label>
+      <select id="classe" th:field="*{perso.classe}">
+        <option th:value="Sorcier" th:text ="Sorcier"></option>
+        <option th:value="Chevalier" th:text ="Chevalier"></option>
+        <option th:value="Archer" th:text ="Archer"></option>
+        <option th:value="Occultiste" th:text ="Occultiste"></option>
+        <option th:value="Paladin" th:text ="Paladin"></option>
+        <option th:value="Ménestrel" th:text ="Ménestrel"></option>
+      </select>
+    </div>
+
+    <div class="CreaPersoForm">
+      <label>Points de stats disponibles</label>
+      <input type="number" th:value="${perso.statsPoints}" readonly>
+    </div>
+
+    <!-- Stats avec boutons + -->
+    <div class="CreaPersoForm">
+      <label>Force</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.force}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/force(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Agilité</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.agilite}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/agilite(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Endurance</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.endurance}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/endurance(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Rapidité</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.rapidite}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/rapidite(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Intelligence</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.intelligence}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/intelligence(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Chance</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.chance}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/chance(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+    <div class="CreaPersoForm">
+      <label>Charisme</label>
+      <div class="statsDetails">
+        <input type="number" th:value="${perso.charisme}" readonly>
+        <a th:href="@{/hello/addStatMongo/{id}/charisme(id=${perso.id})}"
+           th:classappend="${perso.statsPoints <= 0} ? 'disabled'">+</a>
+      </div>
+    </div>
+
+    <div class="CreaPersoButton">
+      <a th:href="@{/hello/personnages}">Retour</a>
+    </div>
+  </div>
+</main>
+<footer></footer>
+</body>
+</html>

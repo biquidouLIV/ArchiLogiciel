@@ -1,97 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>détails</title>
+    <title>Cheat Page</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<header>
-    <p>détails perso</p>
-</header>
-
+<header><p>cheat page</p></header>
 <main class="detailsPerso">
-    <form th:action="@{/hello/details/{index}(index=${index})}" method="post" th:object="${perso}">
+    <form th:action="@{/hello/cheatpage/{id}(id=${perso.id})}" method="post">
         <div class="CreaPersoForm">
-            <label for="name">Name</label>
-            <input type="text" id="name" th:field="*{name}">
+            <label>Nom</label>
+            <input type="text" name="name" th:value="${perso.name}">
         </div>
         <div class="CreaPersoForm">
-            <label for="level">Level</label>
-            <input type="number" id="level" th:field="*{level}">
+            <label>Niveau</label>
+            <input type="number" name="level" th:value="${perso.level}">
         </div>
         <div class="CreaPersoForm">
-            <label for="statdPoints">statd Points</label>
-            <input type="number" id="statdPoints" th:field="*{statsPoints}">
-        </div>
-        <div class="CreaPersoForm">
-            <label for="classe">Classe</label>
-            <select id="classe" th:field="*{classe}">
-                <option th:value="Sorcier" th:text ="Sorcier"></option>
-                <option th:value="Chevalier" th:text ="Chevalier"></option>
-                <option th:value="Archer" th:text ="Archer"></option>
-                <option th:value="Occultiste" th:text ="Occultiste"></option>
-                <option th:value="Paladin" th:text ="Paladin"></option>
-                <option th:value="Ménestrel" th:text ="Ménestrel"></option>
+            <label>Classe</label>
+            <select name="classe">
+                <option value="Sorcier"    th:selected="${perso.classe == 'Sorcier'}">Sorcier</option>
+                <option value="Chevalier"  th:selected="${perso.classe == 'Chevalier'}">Chevalier</option>
+                <option value="Archer"     th:selected="${perso.classe == 'Archer'}">Archer</option>
+                <option value="Occultiste" th:selected="${perso.classe == 'Occultiste'}">Occultiste</option>
+                <option value="Paladin"    th:selected="${perso.classe == 'Paladin'}">Paladin</option>
+                <option value="Ménestrel"  th:selected="${perso.classe == 'Ménestrel'}">Ménestrel</option>
             </select>
         </div>
         <div class="CreaPersoForm">
-            <label for="race">Race</label>
-            <select id="race" th:field="*{race}">
-                <option th:value="Orc" th:text ="Orc"></option>
-                <option th:value="Elfe" th:text ="Elfe"></option>
-                <option th:value="Elfelin" th:text ="Elfelin"></option>
-                <option th:value="Nain" th:text ="Nain"></option>
-                <option th:value="Hobbit" th:text ="Hobbit"></option>
-                <option th:value="Gobelin" th:text ="Gobelin"></option>
+            <label>Race</label>
+            <select name="race">
+                <option value="Orc"     th:selected="${perso.race == 'Orc'}">Orc</option>
+                <option value="Elfe"    th:selected="${perso.race == 'Elfe'}">Elfe</option>
+                <option value="Elfelin" th:selected="${perso.race == 'Elfelin'}">Elfelin</option>
+                <option value="Nain"    th:selected="${perso.race == 'Nain'}">Nain</option>
+                <option value="Hobbit"  th:selected="${perso.race == 'Hobbit'}">Hobbit</option>
+                <option value="Gobelin" th:selected="${perso.race == 'Gobelin'}">Gobelin</option>
             </select>
         </div>
-
-
         <div class="CreaPersoForm">
-            <label for="force">force</label>
-            <input type="number" id="force" th:field="*{force}">
-        </div>
-
-        <div class="CreaPersoForm">
-            <label for="agilite">agilité</label>
-            <input type="number" id="agilite" th:field="*{agilite}">
-        </div>
-
-        <div class="CreaPersoForm">
-            <label for="endurance">endurance</label>
-            <input type="number" id="endurance" th:field="*{endurance}">
-        </div>
-
-        <div class="CreaPersoForm">
-            <label for="rapidite">rapidité</label>
-            <input type="number" id="rapidite" th:field="*{rapidite}">
-        </div>
-
-        <div class="CreaPersoForm">
-            <label for="intelligence">intelligence</label>
-            <input type="number" id="intelligence" th:field="*{intelligence}">
-        </div>
-
-        <div class="CreaPersoForm">
-            <label for="chance">chance</label>
-            <input type="number" id="chance" th:field="*{chance}">
+            <label>Force</label>
+            <input type="number" name="force" th:value="${perso.force}">
         </div>
         <div class="CreaPersoForm">
-            <label for="charisme">charisme</label>
-            <input type="number" id="charisme" th:field="*{charisme}">
+            <label>Agilité</label>
+            <input type="number" name="agilite" th:value="${perso.agilite}">
         </div>
-
-
+        <div class="CreaPersoForm">
+            <label>Endurance</label>
+            <input type="number" name="endurance" th:value="${perso.endurance}">
+        </div>
+        <div class="CreaPersoForm">
+            <label>Rapidité</label>
+            <input type="number" name="rapidite" th:value="${perso.rapidite}">
+        </div>
+        <div class="CreaPersoForm">
+            <label>Intelligence</label>
+            <input type="number" name="intelligence" th:value="${perso.intelligence}">
+        </div>
+        <div class="CreaPersoForm">
+            <label>Chance</label>
+            <input type="number" name="chance" th:value="${perso.chance}">
+        </div>
+        <div class="CreaPersoForm">
+            <label>Charisme</label>
+            <input type="number" name="charisme" th:value="${perso.charisme}">
+        </div>
         <div class="CreaPersoButton">
+            <a th:href="@{/hello/details/{id}(id=${perso.id})}">Annuler</a>
             <button type="submit">Enregistrer</button>
         </div>
     </form>
-
 </main>
-
-<footer>
-
-</footer>
+<footer></footer>
 </body>
 </html>
