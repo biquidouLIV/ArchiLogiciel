@@ -9,7 +9,7 @@ public class User {
     public String getId(){return this.id;}
     public void setId(String id){this.id = id;}
 
-    public String getlogin(){return this.login;}
+    public String getLogin(){return this.login;}
     public void setLogin(String login){this.login = login;}
 
     public String getPassword(){return this.password;}

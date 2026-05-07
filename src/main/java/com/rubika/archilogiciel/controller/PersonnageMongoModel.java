@@ -17,6 +17,8 @@ public class PersonnageMongoModel {
     private String race;
     private int level;
 
+    private String ownerId;
+
     public PersonnageMongoModel(Personnage personnage){
         this.id = UUID.randomUUID();
         this.name = personnage.getName();
@@ -25,4 +27,11 @@ public class PersonnageMongoModel {
         this.level = personnage.getLevel();
     }
 
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
 }

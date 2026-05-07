@@ -4,17 +4,21 @@ import com.rubika.archilogiciel.controller.dto.Personnage;
 import com.rubika.archilogiciel.controller.dto.UserList;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/hello")
 public class HelloController {
 
     private ArrayList<Personnage> PersoList = new ArrayList<Personnage>();
+    @Autowired
+    private MongoPersonnageDao mongoPersonnageDao;
 
 
 
@@ -26,14 +30,14 @@ public class HelloController {
         return "hello";
     }
     @PostMapping("/create")
-    public String saveCreatePerso(Model model, @ModelAttribute Personnage personnage){
-
-        personnage.setStatsPoints(personnage.getLevel()*3);
-
-        PersoList.add(personnage);
-        model.addAttribute("personnages", PersoList);
-
-        return "personalized-hello";
+    public String saveCreatePerso(@CookieValue(value = "status", defaultValue = "anonymous") String login,
+                                  @ModelAttribute Personnage personnage) {
+        if (!login.equals("anonymous")) {
+            PersonnageMongoModel model = new PersonnageMongoModel(personnage);
+            model.setOwnerId(login); // Lie le personnage au compte connecté
+            mongoPersonnageDao.save(model); // Sauvegarde persistante
+        }
+        return "redirect:/hello/list";
     }
 
 
@@ -117,32 +121,65 @@ public class HelloController {
     return "cheatpage";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String login, @RequestParam String password, HttpServletResponse response)
-    {
-        boolean userExists = UserList.userList.stream().anyMatch(user -> user.getlogin().equals(login) && user.getlogin().equals(password));
-
-        if(userExists)
-        {
-            Cookie cookie = new Cookie("status", login);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-
-            return "redirect:/personnages";
-        }
-
-        return "login";
-    }
 
     @GetMapping("/personnages")
     public String listPersonnages(@CookieValue(value = "status", defaultValue = "anonymous") String status, Model model) {
-        if (status.equals("loggedin")) {
-            // model.addAttribute("personnages", repo.findByOwner(currentLogin));
-        } else {
-            // renvoyer une liste vide[cite: 1]
+        model.addAttribute("status",status);
+
+        if (!status.equals("anonymous")) {
+            model.addAttribute("personnages", mongoPersonnageDao.findByOwnerId(status));
         }
-        return "liste_personnages";
+        else {
+            model.addAttribute("personnages", new ArrayList<PersonnageMongoModel>());
+        }
+        return "personalized-hello";
     }
 
+    @GetMapping("/login")
+    public String showLoginPage(Model model, @CookieValue(value = "status", defaultValue = "anonymous") String status) {
+        model.addAttribute("status", status);
+        return "login";
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestParam String login, @RequestParam String password) {
+        // On utilise le nom complet pour éviter toute confusion avec une variable
+        boolean exists = com.rubika.archilogiciel.controller.dto.UserList.userList.stream()
+                .anyMatch(u -> u.getLogin().equals(login));
+
+        if (!exists) {
+            com.rubika.archilogiciel.controller.dto.User newUser = new com.rubika.archilogiciel.controller.dto.User();
+            newUser.setLogin(login); // Attention au L majuscule ici
+            newUser.setPassword(password);
+            com.rubika.archilogiciel.controller.dto.UserList.userList.add(newUser);
+            System.out.println("Nouvel utilisateur créé : " + login);
+        }
+        return "redirect:/hello/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String login, @RequestParam String password, HttpServletResponse response) {
+        // Vérification dans la liste statique de la classe UserList
+        boolean authSuccess = com.rubika.archilogiciel.controller.dto.UserList.userList.stream()
+                .anyMatch(u -> u.getLogin().equals(login) && u.getPassword().equals(password));
+
+        if (authSuccess) {
+            Cookie cookie = new Cookie("status", login);
+            cookie.setPath("/");
+            cookie.setMaxAge(3600);
+            response.addCookie(cookie);
+            return "redirect:/hello/personnages";
+        }
+        return "redirect:/hello/login?error=true";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("status", "anonymous");
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Supprime le cookie
+        response.addCookie(cookie);
+        return "redirect:/hello/login";
+    }
 
 }

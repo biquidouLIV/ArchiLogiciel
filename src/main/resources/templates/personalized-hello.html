@@ -6,17 +6,25 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <header>
-        <p>Vos personnages</p>
-    </header>
-
-    <h2 id="loggedin">ANONYMOUS</h2>
-
-    <!-- Section qui change selon l'état -->
-    <div id="action-area">
-        <!-- JS injectera le bouton ici -->
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #333; color: white;">
+    <div class="logo">
+        <a th:href="@{/hello/home}" style="color: white; text-decoration: none; font-weight: bold;">Mon App Persos</a>
     </div>
 
+    <div class="user-menu">
+        <th:block th:if="${status == null or status == 'anonymous'}">
+            <a th:href="@{/hello/login}"
+               style="background: #4CAF50; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">
+                Connexion / Inscription
+            </a>
+        </th:block>
+
+        <th:block th:if="${status != null and status != 'anonymous'}">
+            Bienvenue, <b th:text="${status}">Utilisateur</b> !
+            <a th:href="@{/hello/logout}" style="color: #ff4c4c; margin-left: 15px;">Déconnexion</a>
+        </th:block>
+    </div>
+</header>
 
     <div class="ListePersos">
         <li th:each="perso : ${personnages}">
@@ -35,27 +43,4 @@
         <p>Fin de vos personnages</p>
     </footer>
 </body>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let cookies = document.cookie.split(';');
-            let userLogin = null;
-
-            cookies.forEach(cookie => {
-                if (cookie.trim().startsWith("status=")) {
-                    userLogin = cookie.split('=')[1];
-                }
-            });
-
-            if (userLogin) {
-                // Si loggé : on affiche le nom et le bouton de création[cite: 1]
-                document.getElementById("loggedin").innerText = "Connecté en tant que : " + userLogin;
-                document.getElementById("action-area").innerHTML = '<a href="/creer">Créer un personnage</a>';
-            } else {
-                // Si anonyme : on affiche les liens de connexion[cite: 1]
-                document.getElementById("action-area").innerHTML =
-                    '<a href="/login">Se connecter</a> ou <a href="/register">S\'inscrire</a>';
-            }
-        });
-    </script>
 </html>
