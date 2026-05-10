@@ -219,3 +219,29 @@ button {
     font-size: 40px;
 }
 
+.auth-box label{
+    color: black;
+    font-size: 50px;
+    align-self: center;
+    text-shadow: 0 0 10px black;
+}
+
+.main-header {
+    position: relative;
+    display: flex;
+    background-color: black;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-user {
+    position: absolute;
+    right: 30px;
+}
+
+.header-link {
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+}

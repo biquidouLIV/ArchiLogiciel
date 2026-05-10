@@ -6,22 +6,14 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #333; color: white;">
-    <div class="logo">
-        <a th:href="@{/hello/home}" style="color: white; text-decoration: none; font-weight: bold;">Personnages</a>
-    </div>
-
-    <div class="user-menu">
+<header class="main-header">
+    <p>Vos personnages</p>
+    <div class="header-user">
         <th:block th:if="${status == null or status == 'anonymous'}">
-            <a th:href="@{/hello/login}"
-               style="background: #4CAF50; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">
-                Connexion / Inscription
-            </a>
+            <a th:href="@{/hello/login}" class="header-link">Connexion</a>
         </th:block>
-
         <th:block th:if="${status != null and status != 'anonymous'}">
-            Bienvenue, <b th:text="${status}">Utilisateur</b> !
-            <a th:href="@{/hello/logout}" style="color: #ff4c4c; margin-left: 15px;">Déconnexion</a>
+            <a th:href="@{/hello/login}" th:text="${status}" class="header-link"></a>
         </th:block>
     </div>
 </header>

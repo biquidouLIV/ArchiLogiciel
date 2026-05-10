@@ -27,10 +27,14 @@ public class HelloController {
 
 
     @GetMapping("/create")
-    public String showCreatePerso(Model model){
+    public String showCreatePerso(Model model, @CookieValue(value = "status", defaultValue = "anonymous") String status) {
+        if (status.equals("anonymous")) {
+            return "redirect:/hello/login";
+        }
         model.addAttribute("perso", new Personnage());
         return "hello";
     }
+    
     @PostMapping("/create")
     public String saveCreatePerso(@CookieValue(value = "status", defaultValue = "anonymous") String login,
                                   @ModelAttribute Personnage personnage) {
@@ -52,7 +56,7 @@ public class HelloController {
     @GetMapping("/list")
     public String showList(Model model){
         model.addAttribute("personnages", PersoList);
-        return "personalized-hello";
+        return "redirect:/hello/personnages";
     }
 
 
