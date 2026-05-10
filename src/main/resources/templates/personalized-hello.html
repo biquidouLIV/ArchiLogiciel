@@ -10,7 +10,7 @@
     <p>Vos personnages</p>
     <div class="header-user">
         <th:block th:if="${status == null or status == 'anonymous'}">
-            <a th:href="@{/hello/login}" class="header-link">Connexion</a>
+            <a th:href="@{/hello/login}" class="header-link">se connexionner</a>
         </th:block>
         <th:block th:if="${status != null and status != 'anonymous'}">
             <a th:href="@{/hello/login}" th:text="${status}" class="header-link"></a>

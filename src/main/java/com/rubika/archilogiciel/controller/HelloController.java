@@ -34,18 +34,15 @@ public class HelloController {
         model.addAttribute("perso", new Personnage());
         return "hello";
     }
-    
+
     @PostMapping("/create")
     public String saveCreatePerso(@CookieValue(value = "status", defaultValue = "anonymous") String login,
                                   @ModelAttribute Personnage personnage) {
         if (!login.equals("anonymous")) {
-            try {
-                PersonnageMongoModel model = new PersonnageMongoModel(personnage);
-                model.setOwnerId(login);
-                mongoPersonnageDao.save(model);
-            } catch (Exception e) {
-                System.err.println(">>> ERREUR MONGO save: " + e.getMessage());
-            }
+        PersonnageMongoModel model = new PersonnageMongoModel(personnage);
+        model.setOwnerId(login);
+        mongoPersonnageDao.save(model);
+
             return "redirect:/hello/personnages";
         }
         PersoList.add(personnage);
@@ -131,15 +128,8 @@ public class HelloController {
 
     @GetMapping("/personnages")
     public String listPersonnages(@CookieValue(value = "status", defaultValue = "anonymous") String status, Model model) {
-        System.out.println(">>> status cookie: " + status);
-        try {
-            var persos = mongoPersonnageDao.findByOwnerId(status);
-            System.out.println(">>> trouvé: " + persos.size());
-            model.addAttribute("personnages", persos);
-        } catch (Exception e) {
-            System.err.println(">>> ERREUR MONGO: " + e.getMessage());
-            model.addAttribute("personnages", new ArrayList<>());
-        }
+        var persos = mongoPersonnageDao.findByOwnerId(status);
+        model.addAttribute("personnages", persos);
         model.addAttribute("status", status);
         return "personalized-hello";
     }
@@ -154,7 +144,6 @@ public class HelloController {
     public String register(@RequestParam String login, @RequestParam String password) {
         if (!mongoUserDao.existsById(login)) {
             mongoUserDao.save(new UserMongoModel(login, password));
-            System.out.println("Nouvel utilisateur créé : " + login);
         }
         return "redirect:/hello/login";
     }
@@ -165,7 +154,6 @@ public class HelloController {
         if (user != null) {
             Cookie cookie = new Cookie("status", login);
             cookie.setPath("/");
-            cookie.setMaxAge(3600);
             response.addCookie(cookie);
             return "redirect:/hello/personnages";
         }
@@ -177,7 +165,7 @@ public class HelloController {
     public String logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("status", "anonymous");
         cookie.setPath("/");
-        cookie.setMaxAge(0); // Supprime le cookie
+        cookie.setMaxAge(0);
         response.addCookie(cookie);
         return "redirect:/hello/login";
     }
